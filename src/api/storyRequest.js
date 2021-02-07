@@ -12,10 +12,7 @@ export function fetchStories() {
     };
 
     fetch(URL.STORIES, requestOptions)
-      .then((response) => {
-        console.log(response);
-        return response.text();
-      })
+      .then((response) => response.text())
       .then((result) => resolve(JSON.parse(result)))
       .catch((error) => reject(error));
   });

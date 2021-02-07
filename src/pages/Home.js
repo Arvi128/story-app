@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Form } from "react-bootstrap";
+import React, { useCallback, useEffect, useState } from "react";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import { fetchStories } from "../api/storyRequest";
 import StoryCard from "../components/StoryCard";
 
@@ -11,7 +11,20 @@ function Home(props) {
   const [listOfLikes, setListOfLikes] = useState([]);
 
   useEffect(function onLoad() {
-    getStories();
+    setShowLoading(true);
+    try {
+      fetchStories().then((response) => {
+        if (Array.isArray(response.items)) {
+          const list = filterStories(response.items);
+          setShowLoading(false);
+          setStories(list);
+          setSearchResults(list);
+        }
+      });
+    } catch (e) {
+      setShowLoading(false);
+      console.log(e);
+    }
   }, []);
 
   useEffect(
@@ -39,36 +52,36 @@ function Home(props) {
     [stories]
   );
 
-  async function getStories() {
-    setShowLoading(true);
-    try {
-      const response = await fetchStories();
-      if (Array.isArray(response.items)) {
-        const list = filterStories(response.items);
-        console.log({ list });
-        setShowLoading(false);
-        setStories(list);
-        setSearchResults(list);
-      }
-    } catch (e) {
-      setShowLoading(false);
-
-      console.log(e);
-    }
-  }
+  /**
+   * @param {array} list
+   * filter objects with a story key
+   * returns array
+   */
   function filterStories(list) {
     return list.filter((item) => item.story);
   }
+  /**
+   *
+   * @param {string} originText
+   * search function
+   * returns boolean
+   */
   function isMatchingString(originText) {
     if (originText.toLowerCase().includes(searchText.toLowerCase())) {
       return true;
     }
     return false;
   }
+
   function getLikeHistory() {
     return localStorage.getItem("likeHistory");
   }
 
+  /**
+   *
+   * @param {string} storyId
+   * handles like/unlike story actions
+   */
   function markStoryAsFavoriteHandler(storyId) {
     try {
       const currentListOfLikes = [...listOfLikes];
@@ -94,6 +107,12 @@ function Home(props) {
   function isStoryLiked(storyId) {
     return listOfLikes.includes(storyId);
   }
+
+  /**
+   * @param {any} event
+   * @param {string} storyId
+   * double click/tap to like
+   */
   function onDoubleClickStory(event, storyId) {
     if (event.detail === 2) {
       markStoryAsFavoriteHandler(storyId);

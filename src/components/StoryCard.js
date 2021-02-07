@@ -1,5 +1,5 @@
-import react from "react";
-import { Card, Button, Row, Col } from "react-bootstrap";
+import React from "react";
+import { Card, Row, Col } from "react-bootstrap";
 
 function StoryCard({ story, onClickStory, isStoryLiked, onClickHeart }) {
   return (
