@@ -11,8 +11,9 @@ function StoryCard({ story, onClickStory, isStoryLiked }) {
       <Card.Body>
         <Card.Title>{story.headline}</Card.Title>
         <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
+          This week on NL Hafta, Newslaundry’s Manisha Pande, Raman Kirpal,
+          Mehraj D Lone, and Jayashree Arunachalam are joined by Vivek Kaul, an
+          author and journalist.
         </Card.Text>
 
         <Row>

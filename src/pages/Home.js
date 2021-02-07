@@ -43,6 +43,7 @@ function Home(props) {
     setShowLoading(true);
     try {
       const response = await fetchStories();
+      console.log({ response });
       if (Array.isArray(response.items)) {
         const list = filterStories(response.items);
         setShowLoading(false);
@@ -111,7 +112,7 @@ function Home(props) {
           </Form>
         </Col>
         <Row className="mx-2">
-          {showLoading && <div>Loading Stories ...</div>}
+          {showLoading && <div className="pl-2">Loading Stories ...</div>}
           {searchResults.map((item, index) => (
             <Col xs={12} sm={12} md={6} lg={4} key={item.id} className="my-4">
               <StoryCard
@@ -122,7 +123,7 @@ function Home(props) {
             </Col>
           ))}
           {!showLoading && searchResults.length === 0 && (
-            <div>No stories found !</div>
+            <div className="pl-2">No stories found !</div>
           )}
         </Row>
       </Row>
