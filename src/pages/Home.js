@@ -43,9 +43,9 @@ function Home(props) {
     setShowLoading(true);
     try {
       const response = await fetchStories();
-      console.log({ response });
       if (Array.isArray(response.items)) {
         const list = filterStories(response.items);
+        console.log({ list });
         setShowLoading(false);
         setStories(list);
         setSearchResults(list);
@@ -94,6 +94,11 @@ function Home(props) {
   function isStoryLiked(storyId) {
     return listOfLikes.includes(storyId);
   }
+  function onDoubleClickStory(event, storyId) {
+    if (event.detail === 2) {
+      markStoryAsFavoriteHandler(storyId);
+    }
+  }
   return (
     <Container>
       <Row>
@@ -118,7 +123,8 @@ function Home(props) {
               <StoryCard
                 story={item.story}
                 isStoryLiked={isStoryLiked(item.story.id)}
-                onClickStory={markStoryAsFavoriteHandler}
+                onClickHeart={markStoryAsFavoriteHandler}
+                onClickStory={onDoubleClickStory}
               />
             </Col>
           ))}
