@@ -4,10 +4,7 @@ import { Card, Button, Row, Col } from "react-bootstrap";
 function StoryCard({ story, onClickStory, isStoryLiked, onClickHeart }) {
   return (
     <Card className="story-card" onClick={(e) => onClickStory(e, story.id)}>
-      <Card.Img
-        variant="top"
-        src="https://th.bing.com/th/id/OIP.y34ztBkUddWTcezvTXOKXwHaEK?pid=Api&rs=1"
-      />
+      <Card.Img variant="top" src="/assets/img/sample-story.jpeg" />
       <Card.Body>
         <Card.Title>{story.headline}</Card.Title>
         <Card.Text>
