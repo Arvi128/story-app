@@ -23,13 +23,13 @@ function StoryCard({ story, onClickStory, isStoryLiked }) {
             <div onClick={() => onClickStory(story.id)} className="like-btn">
               {isStoryLiked ? (
                 <img
-                  src="/assets/img/unfilled-heart.png"
+                  src="/assets/img/filled-heart.png"
                   alt="like"
                   className="heart-img"
                 />
               ) : (
                 <img
-                  src="/assets/img/filled-heart.png"
+                  src="/assets/img/unfilled-heart.png"
                   alt="unlike"
                   className="heart-img"
                 />
