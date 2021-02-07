@@ -5,6 +5,7 @@
 .like-btn {
   height: 25px;
   width: 25px;
+  cursor: pointer;
 }
 .heart-img {
   width: auto;

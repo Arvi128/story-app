@@ -1,10 +1,19 @@
 import URL from "./constants";
 
 export function fetchStories() {
-  fetch(URL.STORIES)
-    .then((response) => response.json())
-    .then((data) => data)
-    .catch((error) => {
-      console.log(error);
-    });
+  return new Promise((resolve, reject) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Origin", URL.DEPLOYMENT_URL);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(URL.STORIES, requestOptions)
+      .then((response) => response.text())
+      .then((result) => resolve(JSON.parse(result)))
+      .catch((error) => reject(error));
+  });
 }

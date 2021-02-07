@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Form } from "react-bootstrap";
 import { fetchStories } from "../api/storyRequest";
 import StoryCard from "../components/StoryCard";
-import response from "../response";
+
 function Home(props) {
-  const items = response.items.filter((item) => item.story);
-  const [stories, setStories] = useState(items);
+  const [showLoading, setShowLoading] = useState(false);
+  const [stories, setStories] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [listOfLikes, setListOfLikes] = useState([]);
 
   useEffect(function onLoad() {
     getStories();
@@ -27,13 +28,35 @@ function Home(props) {
     [searchText]
   );
 
+  useEffect(
+    function loadLikeHistory() {
+      const likeHistory = getLikeHistory();
+      if (likeHistory) {
+        const list = JSON.parse(likeHistory).listOfLikes;
+        setListOfLikes(list);
+      }
+    },
+    [stories]
+  );
+
   async function getStories() {
+    setShowLoading(true);
     try {
       const response = await fetchStories();
-      console.log(response);
+      if (Array.isArray(response.items)) {
+        const list = filterStories(response.items);
+        setShowLoading(false);
+        setStories(list);
+        setSearchResults(list);
+      }
     } catch (e) {
+      setShowLoading(false);
+
       console.log(e);
     }
+  }
+  function filterStories(list) {
+    return list.filter((item) => item.story);
   }
   function isMatchingString(originText) {
     if (originText.toLowerCase().includes(searchText.toLowerCase())) {
@@ -41,7 +64,35 @@ function Home(props) {
     }
     return false;
   }
+  function getLikeHistory() {
+    return localStorage.getItem("likeHistory");
+  }
 
+  function markStoryAsFavoriteHandler(storyId) {
+    try {
+      const currentListOfLikes = [...listOfLikes];
+      if (currentListOfLikes.length > 0) {
+        const index = currentListOfLikes.findIndex((item) => item === storyId);
+        if (index > -1) {
+          currentListOfLikes.splice(index, 1);
+        } else {
+          currentListOfLikes.push(storyId);
+        }
+      } else {
+        currentListOfLikes.push(storyId);
+      }
+      setListOfLikes(currentListOfLikes);
+      localStorage.setItem(
+        "likeHistory",
+        JSON.stringify({ listOfLikes: currentListOfLikes })
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  function isStoryLiked(storyId) {
+    return listOfLikes.includes(storyId);
+  }
   return (
     <Container>
       <Row>
@@ -60,11 +111,19 @@ function Home(props) {
           </Form>
         </Col>
         <Row className="mx-2">
+          {showLoading && <div>Loading Stories ...</div>}
           {searchResults.map((item, index) => (
             <Col xs={12} sm={12} md={6} lg={4} key={item.id} className="my-4">
-              <StoryCard story={item.story} />
+              <StoryCard
+                story={item.story}
+                isStoryLiked={isStoryLiked(item.story.id)}
+                onClickStory={markStoryAsFavoriteHandler}
+              />
             </Col>
           ))}
+          {!showLoading && searchResults.length === 0 && (
+            <div>No stories found !</div>
+          )}
         </Row>
       </Row>
     </Container>
