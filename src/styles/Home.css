@@ -1,0 +1,12 @@
+.page-title {
+  font-size: 2em;
+  font-weight: 600;
+}
+.like-btn {
+  height: 25px;
+  width: 25px;
+}
+.heart-img {
+  width: auto;
+  height: 100%;
+}
