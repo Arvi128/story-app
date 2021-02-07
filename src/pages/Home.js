@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Form } from "react-bootstrap";
+import { fetchStories } from "../api/storyRequest";
 import StoryCard from "../components/StoryCard";
 import response from "../response";
 function Home(props) {
@@ -7,6 +8,10 @@ function Home(props) {
   const [stories, setStories] = useState(items);
   const [searchResults, setSearchResults] = useState([]);
   const [searchText, setSearchText] = useState("");
+
+  useEffect(function onLoad() {
+    getStories();
+  }, []);
 
   useEffect(
     function searchStories() {
@@ -22,6 +27,14 @@ function Home(props) {
     [searchText]
   );
 
+  async function getStories() {
+    try {
+      const response = await fetchStories();
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  }
   function isMatchingString(originText) {
     if (originText.toLowerCase().includes(searchText.toLowerCase())) {
       return true;
